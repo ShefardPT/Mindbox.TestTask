@@ -75,7 +75,7 @@ public class Triangle : Shape, IEquilateral, IRectangular
         // но согласно постановке задачи это не требуется
         // можно реализовать позже
         
-        const double tolerance = .0000001;
+        const double tolerance = .0001;
         var sides = new[] { SideA, SideB, SideC }.OrderDescending().ToArray();
         var supposedHypotenuse = sides[0];
         var cathet1 = sides[1];
