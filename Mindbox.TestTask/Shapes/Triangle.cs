@@ -3,25 +3,31 @@ namespace Mindbox.TestTask.Shapes;
 /// <summary>
 /// Класс-модель треугольника
 /// </summary>
-public class Triangle : Shape
+public class Triangle : Shape, IEquilateral, IRectangular
 {
     /// <summary>
     /// Сторона A треугольника
     /// </summary>
-    public double SideA { get; set; }
+    public double SideA { get; }
 
     /// <summary>
     /// Сторона B треугольника
     /// </summary>
-    public double SideB { get; set; }
+    public double SideB { get; }
 
     /// <summary>
     /// Сторона C треугольника
     /// </summary>
-    public double SideC { get; set; }
+    public double SideC { get; }
 
     /// <inheritdoc />
     public override double Area { get; }
+
+    /// <inheritdoc />
+    public bool IsEquilateral { get; }
+
+    /// <inheritdoc />
+    public bool IsRectangular { get; }
 
     /// <summary>
     /// Конструктор по трём сторонам треугольника
@@ -39,6 +45,8 @@ public class Triangle : Shape
         SideC = c;
 
         Area = CalculateShapeArea();
+        IsEquilateral = CheckIsEquilateral();
+        IsRectangular = CheckIsRectangular();
     }
 
     /// <inheritdoc />
@@ -46,6 +54,35 @@ public class Triangle : Shape
     {
         var halfMeter = (SideA + SideB + SideC) / 2;
         var result = Math.Sqrt(halfMeter * (halfMeter - SideA) * (halfMeter - SideB) * (halfMeter - SideC));
+        return result;
+    }
+
+    /// <summary>
+    /// Проверка на равносторонность
+    /// </summary>
+    private bool CheckIsEquilateral()
+    {
+        var result = SideA.Equals(SideB) && SideB.Equals(SideC);
+        return result;
+    }
+
+    /// <summary>
+    /// Проверка на прямоугольность
+    /// </summary>
+    private bool CheckIsRectangular()
+    {
+        // возможно было бы лучше расчитывать каждый из углов треугольника
+        // но согласно постановке задачи это не требуется
+        // можно реализовать позже
+        
+        const double tolerance = .0000001;
+        var sides = new[] { SideA, SideB, SideC }.OrderDescending().ToArray();
+        var supposedHypotenuse = sides[0];
+        var cathet1 = sides[1];
+        var cathet2 = sides[2];
+        var hypotByCathets = double.Hypot(cathet1, cathet2);
+
+        var result = Math.Abs(supposedHypotenuse - hypotByCathets) < tolerance;
         return result;
     }
     
